@@ -88,10 +88,14 @@ app.use(function (err, req, res, next) {
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
+
+var syncOptions = { force: false };
 if (process.env.NODE_ENV === "test") {
   syncOptions.force = true;
 }
-var syncOptions = { force: false };
+if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
+
+
 // Starting the server, syncing our models ------------------------------------/
 db.sequelize.sync(syncOptions).then(function() {
     app.listen(PORT, function() {
